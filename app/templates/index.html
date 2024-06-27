@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Controller</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Discord Bot Controller</h1>
+        <form action="/start" method="POST">
+            <label for="user_token">User Token:</label>
+            <input type="text" id="user_token" name="user_token" value="{{ user_token }}" required>
+            <br><br>
+            <label for="channel_id">Channel ID:</label>
+            <input type="text" id="channel_id" name="channel_id" value="{{ channel_id }}" required>
+            <br><br>
+            <input type="submit" value="Start Bot">
+        </form>
+        <br>
+        <a href="/stop"><button>Stop Bot</button></a>
+    </div>
+</body>
+</html>
