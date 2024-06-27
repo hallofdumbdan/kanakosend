@@ -2,25 +2,28 @@ function startBot() {
     var reaction = document.getElementById('reaction').value.trim();
     var channelID = document.getElementById('channel').value.trim();
     var userToken = document.getElementById('token').value.trim();
-    var userID = document.getElementById('userID').value.trim();
 
-    if (!reaction || !channelID || !userToken || !userID) {
+    if (!reaction || !channelID || !userToken) {
         alert('Please fill in all fields');
         return;
     }
 
     // Construct the reaction URL
-    var reactionURL = `https://discord.com/api/v9/channels/${channelID}/messages/${userID}/reactions/${reaction}/@me`;
+    var reactionURL = `https://discord.com/api/v9/channels/${channelID}/messages`;
 
     // Start reacting
     fetch(reactionURL, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
-            'Authorization': userToken
-        }
+            'Authorization': userToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: '/start'
+        })
     })
     .then(response => {
-        if (response.status === 204) {
+        if (response.status === 200) {
             document.getElementById('status').innerHTML = 'Bot started reacting successfully.';
         } else {
             document.getElementById('status').innerHTML = 'Failed to start bot. Status Code: ' + response.status;
@@ -33,6 +36,37 @@ function startBot() {
 }
 
 function stopBot() {
-    document.getElementById('status').innerHTML = 'Bot stopped reacting.';
-    // You can add additional logic here if needed
+    var channelID = document.getElementById('channel').value.trim();
+    var userToken = document.getElementById('token').value.trim();
+
+    if (!channelID || !userToken) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    // Construct the reaction URL
+    var reactionURL = `https://discord.com/api/v9/channels/${channelID}/messages`;
+
+    // Stop reacting
+    fetch(reactionURL, {
+        method: 'POST',
+        headers: {
+            'Authorization': userToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: '/stop'
+        })
+    })
+    .then(response => {
+        if (response.status === 200) {
+            document.getElementById('status').innerHTML = 'Bot stopped reacting successfully.';
+        } else {
+            document.getElementById('status').innerHTML = 'Failed to stop bot. Status Code: ' + response.status;
+        }
+    })
+    .catch(error => {
+        console.error('Error stopping bot:', error);
+        document.getElementById('status').innerHTML = 'Error stopping bot: ' + error.message;
+    });
 }
