@@ -18,20 +18,31 @@ async function sendMessage(channelID, userToken, content) {
     return response.ok;
 }
 
-function startSending() {
+async function startSending() {
     const message = document.getElementById('message').value.trim();
     const channelID = document.getElementById('channel').value.trim();
     const userToken = document.getElementById('token').value.trim();
-    const delay = parseInt(document.getElementById('delay').value.trim());
+    const delayInSeconds = parseFloat(document.getElementById('delay').value.trim());
 
-    if (!message || !channelID || !userToken || isNaN(delay)) {
+    if (!message || !channelID || !userToken || isNaN(delayInSeconds)) {
         alert('Please fill in all fields correctly');
         return;
     }
 
     logMessage('Starting to send messages...');
-    document.getElementById('stop-button').disabled = false;
 
+    // Send the first message immediately
+    const success = await sendMessage(channelID, userToken, message);
+    const time = new Date().toLocaleTimeString();
+
+    if (success) {
+        logMessage(`Message sent to ${channelID} at ${time}`);
+    } else {
+        logMessage(`Failed to send message to ${channelID} at ${time}`);
+        return;  // Stop further attempts if the first message fails
+    }
+
+    // Set interval to send subsequent messages after the delay
     interval = setInterval(async () => {
         const success = await sendMessage(channelID, userToken, message);
         const time = new Date().toLocaleTimeString();
@@ -40,14 +51,12 @@ function startSending() {
             logMessage(`Message sent to ${channelID} at ${time}`);
         } else {
             logMessage(`Failed to send message to ${channelID} at ${time}`);
-            clearInterval(interval);
-            document.getElementById('stop-button').disabled = true;
+            clearInterval(interval);  // Stop further attempts if a message fails
         }
-    }, delay);
+    }, delayInSeconds * 1000);  // Convert seconds to milliseconds
 }
 
 function stopSending() {
     clearInterval(interval);
     logMessage('Stopped sending messages.');
-    document.getElementById('stop-button').disabled = true;
 }
