@@ -1,72 +1,43 @@
-function startBot() {
-    var reaction = document.getElementById('reaction').value.trim();
-    var channelID = document.getElementById('channel').value.trim();
-    var userToken = document.getElementById('token').value.trim();
-
-    if (!reaction || !channelID || !userToken) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-    // Construct the reaction URL
-    var reactionURL = `https://discord.com/api/v9/channels/${channelID}/messages`;
-
-    // Start reacting
-    fetch(reactionURL, {
-        method: 'POST',
-        headers: {
-            'Authorization': userToken,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            content: '/start'
-        })
-    })
-    .then(response => {
-        if (response.status === 200) {
-            document.getElementById('status').innerHTML = 'Bot started reacting successfully.';
-        } else {
-            document.getElementById('status').innerHTML = 'Failed to start bot. Status Code: ' + response.status;
-        }
-    })
-    .catch(error => {
-        console.error('Error starting bot:', error);
-        document.getElementById('status').innerHTML = 'Error starting bot: ' + error.message;
-    });
+function logMessage(message) {
+    const logs = document.getElementById('logs');
+    logs.innerHTML += message + '<br>';
+    logs.scrollTop = logs.scrollHeight;
 }
 
-function stopBot() {
-    var channelID = document.getElementById('channel').value.trim();
-    var userToken = document.getElementById('token').value.trim();
-
-    if (!channelID || !userToken) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-    // Construct the reaction URL
-    var reactionURL = `https://discord.com/api/v9/channels/${channelID}/messages`;
-
-    // Stop reacting
-    fetch(reactionURL, {
+async function sendMessage(channelID, userToken, content) {
+    const response = await fetch(`https://discord.com/api/v9/channels/${channelID}/messages`, {
         method: 'POST',
         headers: {
             'Authorization': userToken,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            content: '/stop'
-        })
-    })
-    .then(response => {
-        if (response.status === 200) {
-            document.getElementById('status').innerHTML = 'Bot stopped reacting successfully.';
-        } else {
-            document.getElementById('status').innerHTML = 'Failed to stop bot. Status Code: ' + response.status;
-        }
-    })
-    .catch(error => {
-        console.error('Error stopping bot:', error);
-        document.getElementById('status').innerHTML = 'Error stopping bot: ' + error.message;
+        body: JSON.stringify({ content })
     });
+    return response.ok;
+}
+
+function startSending() {
+    const message = document.getElementById('message').value.trim();
+    const channelID = document.getElementById('channel').value.trim();
+    const userToken = document.getElementById('token').value.trim();
+    const delay = parseInt(document.getElementById('delay').value.trim());
+
+    if (!message || !channelID || !userToken || isNaN(delay)) {
+        alert('Please fill in all fields correctly');
+        return;
+    }
+
+    logMessage('Starting to send messages...');
+
+    let interval = setInterval(async () => {
+        const success = await sendMessage(channelID, userToken, message);
+        const time = new Date().toLocaleTimeString();
+
+        if (success) {
+            logMessage(`Message sent to ${channelID} at ${time}`);
+        } else {
+            logMessage(`Failed to send message to ${channelID} at ${time}`);
+            clearInterval(interval);
+        }
+    }, delay);
 }
