@@ -21,11 +21,11 @@
             <input type="password" id="token" placeholder="Enter your user token">
         </div>
         <div class="form-group">
-            <label for="delay">Delay (ms)</label>
-            <input type="number" id="delay" placeholder="Enter delay in milliseconds">
+            <label for="delay">Delay (seconds)</label>
+            <input type="number" step="0.1" id="delay" placeholder="Enter delay in seconds">
         </div>
         <button onclick="startSending()">Start Sending</button>
-        <button onclick="stopSending()" id="stop-button" disabled>Stop Sending</button>
+        <button onclick="stopSending()" id="stop-button">Stop Sending</button>
         <div id="logs"></div>
     </div>
 
