@@ -12,7 +12,8 @@ body {
 }
 
 .container {
-    width: 300px;
+    width: 100%;
+    max-width: 400px; /* Ensure container does not stretch too wide */
     padding: 20px;
     background-color: #1E1E1E;
     border-radius: 10px;
@@ -47,6 +48,7 @@ input::placeholder, textarea::placeholder {
 
 textarea {
     resize: vertical;  /* Allow vertical resizing */
+    overflow: auto;    /* Ensure scrolling if content overflows */
 }
 
 button {
