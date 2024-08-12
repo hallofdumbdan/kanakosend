@@ -17,6 +17,7 @@ body {
     background-color: #1E1E1E;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box; /* Ensure padding does not cause overflow */
 }
 
 .form-group {
@@ -30,17 +31,22 @@ label {
     color: #BBBBBB;
 }
 
-input {
+input, textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #333333;
     border-radius: 5px;
     background-color: #2E2E2E;
     color: #FFFFFF;
+    box-sizing: border-box; /* Ensure padding does not cause overflow */
 }
 
-input::placeholder {
+input::placeholder, textarea::placeholder {
     color: #888888;
+}
+
+textarea {
+    resize: vertical;  /* Allow vertical resizing */
 }
 
 button {
@@ -73,19 +79,4 @@ button:hover {
 button:disabled {
     background-color: #444444;
     cursor: not-allowed;
-}
-
-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #333333;
-    border-radius: 5px;
-    background-color: #2E2E2E;
-    color: #FFFFFF;
-    resize: vertical;  /* Allow vertical resizing */
-    box-sizing: border-box;
-}
-
-textarea::placeholder {
-    color: #888888;
 }
