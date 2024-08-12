@@ -74,3 +74,18 @@ button:disabled {
     background-color: #444444;
     cursor: not-allowed;
 }
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #333333;
+    border-radius: 5px;
+    background-color: #2E2E2E;
+    color: #FFFFFF;
+    resize: vertical;  /* Allow vertical resizing */
+    box-sizing: border-box;
+}
+
+textarea::placeholder {
+    color: #888888;
+}
