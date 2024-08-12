@@ -1,3 +1,5 @@
+let interval;  // Declare interval globally so it can be accessed by both functions
+
 function logMessage(message) {
     const logs = document.getElementById('logs');
     logs.innerHTML += message + '<br>';
@@ -28,8 +30,9 @@ function startSending() {
     }
 
     logMessage('Starting to send messages...');
+    document.getElementById('stop-button').disabled = false;
 
-    let interval = setInterval(async () => {
+    interval = setInterval(async () => {
         const success = await sendMessage(channelID, userToken, message);
         const time = new Date().toLocaleTimeString();
 
@@ -38,6 +41,13 @@ function startSending() {
         } else {
             logMessage(`Failed to send message to ${channelID} at ${time}`);
             clearInterval(interval);
+            document.getElementById('stop-button').disabled = true;
         }
     }, delay);
+}
+
+function stopSending() {
+    clearInterval(interval);
+    logMessage('Stopped sending messages.');
+    document.getElementById('stop-button').disabled = true;
 }
